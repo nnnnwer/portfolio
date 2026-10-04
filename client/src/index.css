@@ -1,0 +1,173 @@
+@import "tailwindcss";
+
+/* Dark mode follows the .dark class on <html> (set by ThemeContext). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --font-sans: "Schibsted Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-mask: var(--mask);
+  --color-mask-ink: var(--mask-ink);
+  --color-copper: var(--copper);
+  --color-copper-soft: var(--copper-soft);
+  --color-board: var(--board);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+}
+
+/* ---------------------------------------------------------------------------
+   Design tokens: printed-circuit-board palette
+   mask = solder-mask green, copper = traces and pads, silkscreen = ink on board
+   --------------------------------------------------------------------------- */
+:root {
+  --canvas: #eef2ee;
+  --surface: #f8faf7;
+  --ink: #13261f;
+  --muted: #4f665b;
+  --line: #c9d5cd;
+  --mask: #1f5a45;
+  --mask-ink: #f3f7f2;
+  --copper: #9c5719;
+  --copper-soft: #ecd9c5;
+  --board: #1f5a45;
+  --danger: #a3282b;
+  --success: #1f6b47;
+  color-scheme: light;
+}
+
+.dark {
+  --canvas: #0c1f19;
+  --surface: #12291f;
+  --ink: #e6ede5;
+  --muted: #98aea2;
+  --line: #24453a;
+  --mask: #74c39c;
+  --mask-ink: #0c1f19;
+  --copper: #dc9e5a;
+  --copper-soft: #3b2c1c;
+  --board: #17392d;
+  --danger: #f08a86;
+  --success: #74c39c;
+  color-scheme: dark;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-canvas text-ink font-sans antialiased;
+    font-feature-settings: "ss01", "cv11";
+    line-height: 1.6;
+    transition: background-color 200ms ease, color 200ms ease;
+  }
+
+  ::selection {
+    background: var(--copper-soft);
+    color: var(--ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--copper);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  h1, h2, h3 {
+    text-wrap: balance;
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Hero board: copper traces draw once on load, then the pads light up.
+   pathLength="1" on each trace keeps the dash maths resolution-independent.
+   --------------------------------------------------------------------------- */
+@keyframes trace-draw {
+  from { stroke-dashoffset: 1; }
+  to   { stroke-dashoffset: 0; }
+}
+
+@keyframes pad-on {
+  from { opacity: 0.25; }
+  to   { opacity: 1; }
+}
+
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.trace {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: trace-draw 1100ms cubic-bezier(0.45, 0, 0.2, 1) forwards;
+  animation-delay: var(--delay, 0ms);
+}
+
+.pad {
+  opacity: 0.25;
+  animation: pad-on 300ms ease-out forwards;
+  animation-delay: calc(var(--delay, 0ms) + 1000ms);
+}
+
+.rise-in {
+  animation: rise-in 500ms ease-out both;
+  animation-delay: var(--delay, 0ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  .trace { stroke-dashoffset: 0; }
+  .pad { opacity: 1; }
+}
+
+/* ---------------------------------------------------------------------------
+   Print: the Resume page prints as a clean, light, single-column CV.
+   --------------------------------------------------------------------------- */
+@media print {
+  :root, .dark {
+    --canvas: #ffffff;
+    --surface: #ffffff;
+    --ink: #111111;
+    --muted: #444444;
+    --line: #cccccc;
+    --mask: #1f5a45;
+    --copper: #7a4512;
+    color-scheme: light;
+  }
+
+  @page {
+    size: A4;
+    margin: 14mm 14mm 16mm;
+  }
+
+  body {
+    background: #ffffff !important;
+    font-size: 10.5pt;
+  }
+
+  a { text-decoration: none; }
+
+  .print-avoid-break {
+    break-inside: avoid;
+  }
+}

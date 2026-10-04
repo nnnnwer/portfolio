@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="6" fill="#1f5a45"/>
+  <g fill="#c98a45">
+    <rect x="9" y="3" width="2" height="4" rx="1"/><rect x="15" y="3" width="2" height="4" rx="1"/><rect x="21" y="3" width="2" height="4" rx="1"/>
+    <rect x="9" y="25" width="2" height="4" rx="1"/><rect x="15" y="25" width="2" height="4" rx="1"/><rect x="21" y="25" width="2" height="4" rx="1"/>
+  </g>
+  <rect x="7" y="7" width="18" height="18" rx="3" fill="#0f1a16"/>
+  <text x="16" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="700" fill="#e8eee6">OT</text>
+</svg>

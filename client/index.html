@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Owen Thilakoun | Computer Engineering Graduate</title>
+    <meta
+      name="description"
+      content="Portfolio and CV of Owen Thilakoun, a Computer Engineering graduate and aspiring software developer."
+    />
+    <meta name="author" content="Owen Thilakoun" />
+    <meta name="theme-color" content="#1f5a45" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Owen Thilakoun" />
+    <meta property="og:title" content="Owen Thilakoun | Computer Engineering Graduate" />
+    <meta
+      property="og:description"
+      content="Portfolio and CV of Owen Thilakoun, a Computer Engineering graduate and aspiring software developer."
+    />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Schibsted+Grotesk:ital,wght@0,400..800;1,400..800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Apply the saved or system theme before first paint to avoid a flash. -->
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('theme');
+          var dark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+          document.documentElement.classList.toggle('dark', dark);
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <noscript>This site needs JavaScript enabled to load Owen Thilakoun's portfolio.</noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

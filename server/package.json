@@ -1,0 +1,23 @@
+{
+  "name": "owen-portfolio-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "REST API for Owen Thilakoun's portfolio (Express + Supabase)",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.58.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^5.1.0",
+    "express-rate-limit": "^7.5.1",
+    "helmet": "^8.1.0"
+  }
+}
