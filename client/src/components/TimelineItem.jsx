@@ -5,7 +5,7 @@ import PlaceholderText from './PlaceholderText';
 /** One entry in an education or experience timeline. */
 export default function TimelineItem({ title, subtitle, period, meta, description, highlights = [], isPlaceholder, compact = false }) {
   return (
-    <li className="print-avoid-break relative pb-8 pl-7 last:pb-0">
+    <li className={`print-avoid-break relative pl-7 last:pb-0 ${compact ? 'pb-4' : 'pb-8'}`}>
       {/* Trace and via: the vertical line with a node for each entry */}
       <span aria-hidden="true" className="absolute top-2 bottom-0 left-[5px] w-0.5 bg-line" />
       <span
