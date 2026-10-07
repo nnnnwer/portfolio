@@ -4,3 +4,5 @@ dist/
 .env.*
 !.env.example
 .vercel
+# Generated at build time by scripts/snapshot.mjs
+src/data/snapshot.json

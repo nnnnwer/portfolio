@@ -1,19 +1,28 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { readCache, removeCache, writeCache } from '../utils/cache';
+import { readSnapshot } from '../utils/snapshot';
 
 const SLOW_AFTER_MS = 5000;
+
+/** Newest saved copy first (this browser), then the copy built into the site. */
+const readSaved = (key) => {
+  if (!key) return undefined;
+  const cached = readCache(key);
+  return cached !== undefined ? cached : readSnapshot(key);
+};
 
 /**
  * Runs an async fetcher with loading / error / data state.
  * - fetcher(signal) receives an AbortSignal; stale requests are cancelled.
  * - `slow` turns true when a request takes longer than 5s (e.g. a sleeping server).
  * - `retry()` runs the request again.
- * - options.cacheKey: show the last saved data instantly, then refresh it in the
- *   background. If the refresh fails, the saved data stays on screen.
+ * - options.cacheKey: show saved data instantly (from this browser, or from the
+ *   snapshot built into the site), then refresh it in the background.
+ *   If the refresh fails, the saved data stays on screen.
  */
 export function useApi(fetcher, deps = [], { cacheKey } = {}) {
   const [state, setState] = useState(() => ({
-    data: cacheKey ? readCache(cacheKey) : undefined,
+    data: readSaved(cacheKey),
     error: null,
     loading: true,
   }));
@@ -24,7 +33,7 @@ export function useApi(fetcher, deps = [], { cacheKey } = {}) {
 
   useEffect(() => {
     const controller = new AbortController();
-    const cached = cacheKey ? readCache(cacheKey) : undefined;
+    const cached = readSaved(cacheKey);
 
     setState((prev) => ({ data: cacheKey ? cached : prev.data, error: null, loading: true }));
     setSlow(false);

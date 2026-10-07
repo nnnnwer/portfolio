@@ -4,9 +4,12 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "predev": "node scripts/snapshot.mjs",
     "dev": "vite",
+    "prebuild": "node scripts/snapshot.mjs",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "snapshot": "node scripts/snapshot.mjs"
   },
   "engines": {
     "node": ">=20.19.0"
