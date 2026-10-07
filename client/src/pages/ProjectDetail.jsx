@@ -29,7 +29,9 @@ function BackLink() {
 
 export default function ProjectDetail() {
   const { id } = useParams();
-  const { data: project, loading, error, slow, retry } = useApi((signal) => getProject(id, signal), [id]);
+  const { data: project, loading, error, slow, retry } = useApi((signal) => getProject(id, signal), [id], {
+    cacheKey: `project:${id}`,
+  });
 
   useDocumentMeta({
     title: project ? stripPlaceholder(project.title) : error?.status === 404 ? 'Project not found' : 'Project',

@@ -15,7 +15,7 @@ const groupByCategory = (skills) =>
   })).filter((group) => group.skills.length > 0);
 
 export default function Skills() {
-  const skills = useApi((signal) => getSkills(signal), []);
+  const skills = useApi((signal) => getSkills(signal), [], { cacheKey: 'skills' });
 
   useDocumentMeta({
     title: 'Skills',

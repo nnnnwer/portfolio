@@ -273,7 +273,7 @@ const toDownloadUrl = (url, name) => {
 };
 
 export default function Resume() {
-  const resume = useApi(loadResume, []);
+    const resume = useApi(loadResume, [], { cacheKey: 'resume' });
   const cvUrl = toDownloadUrl(resume.data?.profile?.cv_url, resume.data?.profile?.full_name);
 
   useDocumentMeta({

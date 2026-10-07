@@ -11,7 +11,7 @@ import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import { getProjects } from '../services/portfolioService';
 
 export default function Projects() {
-  const projects = useApi((signal) => getProjects(signal), []);
+  const projects = useApi((signal) => getProjects(signal), [], { cacheKey: 'projects' });
   const [tech, setTech] = useState(null);
 
   useDocumentMeta({

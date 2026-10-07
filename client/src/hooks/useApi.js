@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { readCache, removeCache, writeCache } from '../utils/cache';
 
 const SLOW_AFTER_MS = 5000;
 
@@ -7,9 +8,15 @@ const SLOW_AFTER_MS = 5000;
  * - fetcher(signal) receives an AbortSignal; stale requests are cancelled.
  * - `slow` turns true when a request takes longer than 5s (e.g. a sleeping server).
  * - `retry()` runs the request again.
+ * - options.cacheKey: show the last saved data instantly, then refresh it in the
+ *   background. If the refresh fails, the saved data stays on screen.
  */
-export function useApi(fetcher, deps = []) {
-  const [state, setState] = useState({ data: undefined, error: null, loading: true });
+export function useApi(fetcher, deps = [], { cacheKey } = {}) {
+  const [state, setState] = useState(() => ({
+    data: cacheKey ? readCache(cacheKey) : undefined,
+    error: null,
+    loading: true,
+  }));
   const [slow, setSlow] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const fetcherRef = useRef(fetcher);
@@ -17,18 +24,30 @@ export function useApi(fetcher, deps = []) {
 
   useEffect(() => {
     const controller = new AbortController();
-    setState((prev) => ({ ...prev, error: null, loading: true }));
+    const cached = cacheKey ? readCache(cacheKey) : undefined;
+
+    setState((prev) => ({ data: cacheKey ? cached : prev.data, error: null, loading: true }));
     setSlow(false);
     const slowTimer = setTimeout(() => setSlow(true), SLOW_AFTER_MS);
 
     fetcherRef
       .current(controller.signal)
       .then((data) => {
-        if (!controller.signal.aborted) setState({ data, error: null, loading: false });
+        if (controller.signal.aborted) return;
+        if (cacheKey) writeCache(cacheKey, data);
+        setState({ data, error: null, loading: false });
       })
       .catch((error) => {
         if (controller.signal.aborted || error?.name === 'CanceledError') return;
-        setState({ data: undefined, error, loading: false });
+
+        // The item no longer exists: forget it and show the error.
+        if (error?.status === 404 && cacheKey) removeCache(cacheKey);
+
+        setState((prev) =>
+          cacheKey && prev.data !== undefined && error?.status !== 404
+            ? { ...prev, loading: false } // keep showing saved data
+            : { data: undefined, error, loading: false },
+        );
       })
       .finally(() => clearTimeout(slowTimer));
 
@@ -37,7 +56,7 @@ export function useApi(fetcher, deps = []) {
       clearTimeout(slowTimer);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [...deps, attempt]);
+  }, [...deps, cacheKey, attempt]);
 
   const retry = useCallback(() => setAttempt((n) => n + 1), []);
 

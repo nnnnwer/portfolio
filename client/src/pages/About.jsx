@@ -27,7 +27,7 @@ function AboutSection({ id, title, children }) {
 
 export default function About() {
   const { data: profile, loading, error, slow, retry } = useProfile();
-  const education = useApi((signal) => getEducation(signal), []);
+  const education = useApi((signal) => getEducation(signal), [], { cacheKey: 'education' });
 
   useDocumentMeta({
     title: 'About',

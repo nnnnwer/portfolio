@@ -17,7 +17,7 @@ import { isPlaceholderText } from '../utils/placeholder';
 export default function Home() {
   const profileState = useProfile();
   const { data: profile, loading, error, retry } = profileState;
-  const featured = useApi((signal) => getProjects(signal, { featured: true }), []);
+  const featured = useApi((signal) => getProjects(signal, { featured: true }), [], { cacheKey: 'projects-featured' });
 
   useDocumentMeta({
     title: null,
